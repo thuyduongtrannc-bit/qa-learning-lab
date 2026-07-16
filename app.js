@@ -300,6 +300,29 @@ function renderTheorySubsections(section) {
                   ? `<ul>${subsection.bullets.map((item) => `<li>${htmlEscape(item)}</li>`).join("")}</ul>`
                   : ""
               }
+              ${
+                subsection.examples?.length
+                  ? `<div class="worked-example-list">
+                      ${subsection.examples
+                        .map(
+                          (example) => `
+                            <div class="worked-example">
+                              <strong>${htmlEscape(example.title)}</strong>
+                              ${example.prompt ? `<p>${htmlEscape(example.prompt)}</p>` : ""}
+                              ${
+                                example.steps?.length
+                                  ? `<ol>${example.steps.map((step) => `<li>${htmlEscape(step)}</li>`).join("")}</ol>`
+                                  : ""
+                              }
+                              ${example.answer ? `<div>${htmlEscape(example.answer)}</div>` : ""}
+                              ${example.examTip ? `<em>${htmlEscape(example.examTip)}</em>` : ""}
+                            </div>
+                          `
+                        )
+                        .join("")}
+                    </div>`
+                  : ""
+              }
               ${subsection.note ? `<div class="subsection-note">${htmlEscape(subsection.note)}</div>` : ""}
             </section>
           `
@@ -592,6 +615,29 @@ function answerText(question) {
   return `${letters[question.answer]}. ${question.options[question.answer]}`;
 }
 
+function renderOptionRationales(question) {
+  if (!question.rationales?.length) return "";
+  const letters = ["A", "B", "C", "D", "E"];
+  return `
+    <div class="option-rationales">
+      <strong>Vì sao từng lựa chọn đúng/sai:</strong>
+      ${question.options
+        .map((option, optionIndex) => {
+          const rationale = question.rationales[optionIndex];
+          if (!rationale) return "";
+          const status = optionIndex === question.answer ? "correct" : "wrong";
+          return `
+            <div class="option-rationale ${status}">
+              <span>${letters[optionIndex]}</span>
+              <p>${htmlEscape(rationale)}</p>
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+}
+
 function renderQuestionCard(question, index, selected, name, meta = []) {
   const letters = ["A", "B", "C", "D", "E"];
   return `
@@ -622,6 +668,7 @@ function renderQuestionCard(question, index, selected, name, meta = []) {
       <div class="explanation${selected !== undefined ? " visible" : ""}">
         <strong class="answer-line">Đáp án đúng: ${htmlEscape(answerText(question))}</strong>
         <strong>Giải thích:</strong> ${htmlEscape(question.explanation)}
+        ${renderOptionRationales(question)}
       </div>
     </article>
   `;

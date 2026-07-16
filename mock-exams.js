@@ -30,7 +30,12 @@
       question,
       options: rotated.options,
       answer: rotated.answer,
-      explanation
+      explanation,
+      rationales: rotated.options.map((option) =>
+        option === correct
+          ? `Dung. ${explanation}`
+          : `Sai. Lua chon nay khong phu hop voi ${lo} (${k}) hoac nham voi mot khai niem khac trong syllabus. Hay doi chieu voi dap an dung: ${correct}.`
+      )
     };
   }
 
@@ -314,7 +319,7 @@
           "Static không chạy phần mềm; dynamic chạy phần mềm và quan sát failure."
         ),
       (e, i) => {
-        const roleQuestion = e % 2 === 0;
+        const roleQuestion = true;
         return makeQuestion(
           e,
           3,
