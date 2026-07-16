@@ -282,32 +282,6 @@ function renderTabs() {
   });
 }
 
-function getLearningObjectiveMap(module, language) {
-  const objectives =
-    language === "vi" && module.viLearningObjectives ? module.viLearningObjectives : module.learningObjectives || [];
-  return Object.fromEntries(objectives.map((objective) => [objective.code, objective]));
-}
-
-function renderLearningObjectivesForSection(section, objectiveMap) {
-  if (!section.los || !section.los.length) return "";
-  return `
-    <div class="lo-inline" aria-label="Learning objectives for this section">
-      ${section.los
-        .map((code) => {
-          const objective = objectiveMap[code];
-          return `
-            <div class="lo-inline-row">
-              <strong>${htmlEscape(code)}</strong>
-              ${objective?.k ? `<span class="lo-chip">${htmlEscape(objective.k)}</span>` : ""}
-              ${objective?.text ? `<span>${htmlEscape(objective.text)}</span>` : ""}
-            </div>
-          `;
-        })
-        .join("")}
-    </div>
-  `;
-}
-
 function renderTheorySubsections(section) {
   if (!section.subsections?.length) return "";
   return `
@@ -363,7 +337,6 @@ function renderTheory(module) {
   const sections =
     language === "vi" && module.viSections ? module.viSections : module.sections || module.theory || [];
   const terms = language === "vi" && module.viTerms ? module.viTerms : module.terms || [];
-  const objectiveMap = getLearningObjectiveMap(module, language);
   const toolbarHtml = hasVietnamese
     ? `
       <section class="theory-toolbar">
@@ -382,7 +355,6 @@ function renderTheory(module) {
             ${section.code ? `<span class="section-code">${htmlEscape(section.code)}</span>` : ""}
             <h3>${htmlEscape(section.heading)}</h3>
           </div>
-          ${renderLearningObjectivesForSection(section, objectiveMap)}
           <p>${htmlEscape(section.body)}</p>
           ${
             section.bullets?.length

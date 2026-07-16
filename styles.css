@@ -558,32 +558,6 @@ a:hover {
   margin: 0;
 }
 
-.lo-inline {
-  display: grid;
-  gap: 8px;
-  margin: 0 0 14px;
-}
-
-.lo-inline-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: baseline;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: #f5f2ff;
-  color: #3730a3;
-  line-height: 1.4;
-}
-
-.lo-inline-row strong {
-  flex: 0 0 auto;
-}
-
-.lo-inline-row span {
-  color: #4f46a5;
-}
-
 .section-panel h3,
 .example-card h3,
 .question-card h3,
