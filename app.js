@@ -308,6 +308,33 @@ function renderLearningObjectivesForSection(section, objectiveMap) {
   `;
 }
 
+function renderTheorySubsections(section) {
+  if (!section.subsections?.length) return "";
+  return `
+    <div class="subsection-list">
+      ${section.subsections
+        .map(
+          (subsection) => `
+            <section class="subsection-block">
+              <div class="subsection-heading">
+                ${subsection.code ? `<span class="subsection-code">${htmlEscape(subsection.code)}</span>` : ""}
+                <h4>${htmlEscape(subsection.heading)}</h4>
+              </div>
+              ${subsection.body ? `<p>${htmlEscape(subsection.body)}</p>` : ""}
+              ${
+                subsection.bullets?.length
+                  ? `<ul>${subsection.bullets.map((item) => `<li>${htmlEscape(item)}</li>`).join("")}</ul>`
+                  : ""
+              }
+              ${subsection.note ? `<div class="subsection-note">${htmlEscape(subsection.note)}</div>` : ""}
+            </section>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderSourceLinks(module) {
   const links = module.sourceLinks || currentCourse().sourceLinks || [];
   if (!links.length) return "";
@@ -362,6 +389,7 @@ function renderTheory(module) {
               ? `<ul class="key-list">${section.bullets.map((item) => `<li>${htmlEscape(item)}</li>`).join("")}</ul>`
               : ""
           }
+          ${renderTheorySubsections(section)}
           ${section.exam ? `<div class="exam-focus"><strong>Exam focus:</strong> ${htmlEscape(section.exam)}</div>` : ""}
         </article>
       `
